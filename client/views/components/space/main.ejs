@@ -1,0 +1,227 @@
+<%
+          var folderData = [];
+          var pwd = null;
+          var response = null;
+          async function fetchData(parentPath, currentDir) {
+            const response = await fetch(params.server_url + '/spaces/get-id', {
+              method: 'POST',
+              headers: {
+                'accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + params.cookies.accessToken,
+            },
+            body: JSON.stringify({spaceParent: parentPath, fileName:currentDir}),
+           })
+           .then((res) => res.json()).then((data) => {
+              // console.log(data);
+              return data;
+            });
+            return response;
+          }
+          async function fetchData1() {
+            response = await fetch(params.server_url + '/spaces/meta', {
+              method: 'POST',
+              headers: {
+                'accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + params.cookies.accessToken,
+            },
+            body: JSON.stringify({spaceParent: path, fileName:""}),
+           })
+            .then((res) => res.json());
+            // console.log(response);
+            folderData = response;
+          }
+          async function fetchData2() {
+            response = await fetch(params.server_url + '/spaces/meta/' + path, {
+              method: 'GET',
+              headers: {
+              'accept': 'application/json',
+              'Authorization': 'Bearer ' + params.cookies.accessToken,
+              },
+            })
+            .then((res) => res.json());
+            folderData = response.slice(1);
+            // console.log(response[0].spaceParent);
+            if (response[0].spaceParent === "/") {
+              pwd = response[0].fileName;
+            }else{
+              pwd = response[0].spaceParent+"/"+response[0].fileName;
+            }
+          }
+          if(path === "/"){
+            await fetchData1();
+          } else {
+            await fetchData2();
+          }
+          %>
+
+<div class="px-8 w-full overflow-y-scroll no-scrollbar">
+  <!-- My Storage Header -->
+  <div class="flex justify-between w-full my-4">
+    <h1 class="text-[24px] font-['Quicksand'] font-bold">My Storage</h1>
+    <button class="btn btn-ghost bg-base-100 font-bold rounded-full flex justify-center items-center " id="toggleAnalytics">
+      <span class="material-symbols-outlined"> insert_chart </span>
+    </button>
+  </div>
+  <!-- Analytics -->
+  <div class="bg-base-100 rounded-[16px] p-6 scale-1 transition-all" id="analytics">
+    <div class="w-full">
+      <h1 class="text-[24px] font-['Quicksand'] font-bold">Overview</h1>
+    </div>
+    <canvas id="myChart" height="60" aria-label="Graph for storage analytics">
+      <p>Your browser does not support the canvas element.</p>
+    </canvas>
+  </div>
+  <div class="w-full rounded-[16px] mt-5 bg-base-100 mb-6 transition-all">
+    <div class="px-8 py-6 w-full">
+      <div class="flex items-center justify-between">
+        <h1 class="text-[24px] font-['Quicksand'] font-bold">My Files</h1>
+        <div class="flex gap-3">
+          <button class="btn btn-primary" onclick="my_modal_2.showModal()">Create Folder</button>
+          <dialog id="my_modal_2" class="modal">
+            <div class="modal-box">
+              <h3 class="font-bold text-lg">Create Folder</h3>
+              <p class="py-4">Please enter the name of the folder</p>
+              <input type="text" required placeholder="Folder name" class="input input-bordered w-full max-w-xs mx-3" id="folderName" name="spaceParent" />
+              <button type="submit" class="btn btn-primary createFolder" id="<%=pwd ? pwd : "/"%>"> Create </button>
+              <!-- </form> -->
+            </div>
+            <form method=" dialog" class="modal-backdrop">
+              <button>close</button>
+            </form>
+          </dialog>
+          <button class="btn btn-primary" onclick="my_modal_3.showModal()">Upload File</button>
+          <dialog id="my_modal_3" class="modal">
+            <div class="modal-box">
+              <h3 class="font-bold text-lg">Upload Your File!</h3>
+              <h1 class="text-5xl font-bold text-center mt-12 mb-5 px-20 text-gray-700 dark:text-gray-200">
+                Upload file
+              </h1>
+              <h2 class="text-2xl text-center m-5 px-20 text-gray-500 dark:text-gray-400 min-w-24">
+                Upload one file at a time or multiple files at once.
+              </h2>
+              <form action="" method="" enctype="multipart/form-data" id="uploadfile">
+                <div class="mt-10 mb-1">
+                  <label for="dropzone-file1" class="flex flex-col items-center w-full max-w-sm p-5 mx-auto mt-2 text-center bg-red-600 hover:bg-red-700 cursor-pointer dark:bg-gray-900 rounded-xl">
+                    <span class="flex">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-gray-200 dark:text-gray-400 mx-1">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+                      </svg>
+
+                      <h2 class="text-2xl font-bold tracking-wide text-gray-200 dark:text-gray-200 mx-1">
+                        Select a file
+                      </h2>
+                    </span>
+
+                    <input id="dropzone-file1" type="file" class="hidden" accept=".pdf, application/pdf, application/x-pdf application/x-bzpdf application/x-gzpdf" <% if (true) { %> multiple <% } %> />
+                  </label>
+                </div>
+
+                <p class="mt-1 font-medium tracking-wide text-gray-700 dark:text-gray-200 text-center">…or drag a file here</p>
+              </form>
+            </div>
+            <form method="dialog" class="modal-backdrop">
+              <button>close</button>
+            </form>
+          </dialog>
+          <script>
+            const fileitems = document.querySelector('#dropzone-file1');
+            const uploadfile = document.querySelector('#uploadfile');
+            fileitems.addEventListener('change', async (e) => {
+              console.log("submitting");
+              e.preventDefault();
+
+              let formData = new FormData();
+
+              // Append all files to FormData
+              formData.append('spaceParent', '<%= pwd ? pwd : "/"%>');
+              for (let i = 0; i < fileitems.files.length; i++) {
+                formData.append('files', fileitems.files[i]);
+              }
+
+              await fetch('<%= params.server_url %>/spaces/create', {
+                  method: 'POST',
+                  credentials: 'include',
+                  body: formData
+                })
+                .then(response => {
+                  console.log(response.json());
+                })
+                .catch(error => {
+                  console.error('Error:', error);
+                });
+              location.reload();
+            });
+          </script>
+        </div>
+      </div>
+      <!-- Breadcrumbs -->
+
+      <div class="text-sm breadcrumbs">
+        <ul>
+          <li><a href="/space">Home</a></li>
+          <%
+            if(path !== "/"){
+              pwdarr = pwd.split("/");
+              let prevdir = "/";
+
+              for( dir of pwdarr) {
+                let id = await fetchData(prevdir, dir);
+          %>
+          <li><a href="/space/<%= id._id%>"><%= dir %></a></li>
+          <%
+          prevdir = prevdir+dir+"/";
+            }} %>
+        </ul>
+      </div>
+      <!-- Folders -->
+      <div class="flex flex-wrap mt-4 gap-x-4">
+
+
+        <%
+          function formatBytes(bytes, decimals = 2) {
+          if (bytes === 0) return '0 Bytes';
+
+          const k = 1024;
+          const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+          const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+          return parseFloat((bytes / Math.pow(k, i)).toFixed(decimals)) + ' ' + sizes[i];
+          }
+        folderData.forEach(folder => {
+            if(folder.isDir){ %>
+        <button class="btn btn-ghost btn-xs sm:btn-sm md:btn-md lg:btn-lg border-2 border-base-200 flex gap-4 my-2" onclick="window.location.href='/space/<%= folder._id %>'">
+          <img src="/images/space/folder_closed.png" />
+          <%= folder.fileName %>
+        </button>
+        <% }}); %>
+
+      </div>
+      <!-- Files -->
+      <div class="mt-2">
+        <table class="table">
+          <tr>
+            <th>File Name</th>
+            <th>Access</th>
+            <th>Date Created</th>
+            <th>Folder</th>
+            <th>Size</th>
+          </tr>
+          <% folderData.forEach( entry => { %>
+          <% if(!entry.isDir){ %>
+          <tr>
+            <td><a class="download" href="<%= params.server_url+"/spaces/stream/"+entry._id %>"><%= entry.fileName %></a></td>
+            <td><%= entry.visibility %></td>
+            <td><%= entry.created.slice(0, 10) %></td>
+            <td><%= entry.spaceParent %></td>
+            <td><%= formatBytes(entry.size)%> </td>
+          </tr>
+          <% } %>
+          <% }); %>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

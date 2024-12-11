@@ -1,0 +1,44 @@
+<%- await include("../layouts/header.ejs", {title: 'ARCHIVUS Space'}) %>
+<%- await include("../components/space/contextmenu.ejs") %>
+<%# function isAccessTokenSet() {
+  const cookiesObject = params.cookies;
+  if (Object.getPrototypeOf(cookiesObject) == null) {
+    return false;
+  }
+
+  // const cookiePairs = cookiesObject.split(';');
+  // for (const pair of cookiePairs) {
+  //   const [key, value] = pair.trim().split('=');
+  //   if (key === 'accessToken') {
+  //     return true;
+  //     console.log(value);
+  //   }
+  // }
+    inc
+  console.log(cookiesObject);
+  return false;
+} %>
+
+<%# if (!isAccessTokenSet()) { %>
+<!-- <div class="flex justify-center items-center flex-col h-full">
+  <h1>Please login first !</h1>
+  <button class="btn"> click me to login! </button>
+</div> -->
+<%# } else { %>
+<div class="flex w-full">
+  <%- await include("../components/space/leftpanel.ejs", {selected: "files"}) %>
+  <div
+    class="bg-base-200 h-[100vh] flex flex-col justify-start items-center w-full"
+  >
+    <!-- Search bar -->
+    <%- await include("../components/space/topbar.ejs", {username:"test"}) %>
+    <!-- Main page -->
+    <%- await include("../components/space/main.ejs", {path: "/"}) %>
+    <!-- Right panel -->
+    <%#- await include("../components/space/rightpanel.ejs") %>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/js/space/space.js"></script>
+</div>
+<%# } %>
+<%- await include("../layouts/end.ejs") %>

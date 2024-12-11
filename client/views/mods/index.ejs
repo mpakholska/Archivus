@@ -1,0 +1,49 @@
+<%- await include("../layouts/header.ejs", { title: 'Archivus Mods' }) %>
+<%- await include("../components/space/contextmenu.ejs") %>
+<%- await include("../components/space/topbar.ejs", {username:"test"}) %>
+
+<%- await include("../layouts/header.ejs", { title: 'Archivus' }) %>
+<%- await include("../components/space/contextmenu.ejs") %>
+<%- await include("../components/space/topbar.ejs", {username:"test"}) %>
+
+<%#- await include("../layouts/archivus/navbar.ejs") %>
+<%#- await include("../components/archivus/info-container.ejs", { fileType: "FREE" }) %>
+<%#- await include("../components/archivus/searchbox.ejs") %>
+<div
+  class="py-20 flex items-center justify-around flex-wrap"
+  style="perspective: 1000px"
+>
+
+  <%
+  const imagepath = '/images/archivus/head-card-img/placeholder.avif';
+
+  const mods_cards = [
+    { title: 'MD to PDF', modId: 'md-to-pdf' },
+    { title: 'Text to PDF', modId: 'text-to-pdf' },
+    { title: 'JPEG to PDF', modId: 'jpeg-to-pdf' },
+    { title: 'PNG to PDF', modId: 'png-to-pdf' },
+    { title: 'PDF to JPEG', modId: 'pdf-to-jpeg' },
+    { title: 'PDF to PNG', modId: 'pdf-to-png' },
+    { title: 'DOC to PDF', modId: 'doc-to-pdf' },
+    { title: 'PDF to DOC', modId: 'pdf-to-doc' },
+    { title: 'PPT to PDF', modId: 'ppt-to-pdf' },
+    { title: 'PDF to PPT', modId: 'pdf-to-ppt' },
+    { title: 'PNG to JPEG', modId: 'png-to-jpeg' },
+    { title: 'JPEG to PNG', modId: 'jpeg-to-png' },
+    { title: 'GIF to PNG', modId: 'gif-to-png' },
+    { title: 'PNG to GIF', modId: 'png-to-gif' },
+  ];
+  %>
+
+  <% for (const item of mods_cards) { %>
+  <% item.imagepath = imagepath; %>
+  <%- await include("../components/archivus/main-card.ejs", {item: item}) %>
+  <% } %>
+</div>
+
+<script src="/js/archivus/card-anim.js"></script>
+<script src="/js/archivus/mods.js"></script>
+
+<%- await include("../layouts/footer.ejs") %>
+
+<%- await include("../layouts/end.ejs") %>

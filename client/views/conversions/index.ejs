@@ -1,0 +1,49 @@
+<%- await include("../layouts/header.ejs", {title: 'Conversions'}) %>
+
+<%- await include("../layouts/archivus/navbar.ejs") %>
+<%- await include("../components/archivus/info-container.ejs",{fileType: "PDF"}) %>
+<%- await include("../components/archivus/searchbox.ejs") %>
+<div
+  class="py-20 flex items-center justify-around flex-wrap"
+  style="perspective: 1000px"
+>
+  <% const items = [
+            { imagepath: "/images/archivus/card-img/pdf.png", title: "IMG ↔ PDF", description: "Converter",},
+            { imagepath: "/images/archivus/card-img/pdf.png", title: "MD ↔ PDF", description: "Converter",},
+            { imagepath: "/images/archivus/card-img/pdf.png", title: "PDF ↔ JPG", description: "Converter",},
+            { imagepath: "/images/archivus/card-img/pdf.png", title: "PDF ↔ JPG", description: "Converter",},
+            { imagepath: "/images/archivus/card-img/pdf.png", title: "PDF ↔ JPG", description: "Converter",},
+            { imagepath: "/images/archivus/card-img/pdf.png", title: "PDF ↔ JPG", description: "Converter",},
+            { imagepath: "/images/archivus/card-img/pdf.png", title: "PDF ↔ JPG", description: "Converter",},
+            { imagepath: "/images/archivus/card-img/pdf.png", title: "PDF ↔ JPG", description: "Converter",},
+            { imagepath: "/images/archivus/card-img/pdf.png", title: "PDF ↔ JPG", description: "Converter",},
+            { imagepath: "/images/archivus/card-img/pdf.png", title: "PDF ↔ JPG", description: "Converter",},
+            { imagepath: "/images/archivus/card-img/pdf.png", title: "PDF ↔ JPG", description: "Converter",},
+            { imagepath: "/images/archivus/card-img/pdf.png", title: "PDF ↔ JPG", description: "Converter",},
+            { imagepath: "/images/archivus/card-img/pdf.png", title: "PDF ↔ JPG", description: "Converter",},
+            { imagepath: "/images/archivus/card-img/pdf.png", title: "PDF ↔ JPG", description: "Converter",},
+            { imagepath: "/images/archivus/card-img/pdf.png", title: "PDF ↔ JPG", description: "Converter",},
+            { imagepath: "/images/archivus/card-img/pdf.png", title: "PDF ↔ JPG", description: "Converter",},
+            // Add more items as needed
+        ];
+        %>
+
+  <% for (const item of items) { %>
+  <%- await include("../components/archivus/tool-card.ejs", {item: item}) %>
+  <% } %>
+</div>
+
+<script src="/js/archivus/vanilla-tilt.js"></script>
+<script type="text/javascript">
+  VanillaTilt.init(document.querySelectorAll('.vanilla-tilt-card'), {
+    max: 10,
+    speed: 5000,
+    glare: true,
+    'max-glare': 0.3,
+  });
+</script>
+
+<%- await include("../layouts/footer.ejs") %>
+
+<%- await include("../layouts/end.ejs") %>
+
